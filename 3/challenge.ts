@@ -19,13 +19,13 @@ export const createCalculator = (input: string): Challenge => {
         let gammaRate = ""
         for (let i = 0; i < binaryNumbers[0].length; i++) {
             const numZeros = binaryNumbers
-                .map((binaryNumber)=>binaryNumber[i])
-                .filter((number)=>number===0)
+                .map((binaryNumber) => binaryNumber[i])
+                .filter((number) => number === 0)
                 .length
-            if(numZeros>binaryNumbers.length/2)
-                gammaRate+="0"
+            if (numZeros > binaryNumbers.length / 2)
+                gammaRate += "0"
             else
-                gammaRate+="1"
+                gammaRate += "1"
         }
         return gammaRate
 
@@ -38,10 +38,10 @@ export const createCalculator = (input: string): Challenge => {
 
     function getEpsilonRate() {
         const gammaRateBinary = getGammaRateInBinary()
-        const epsilonRateBinary =  gammaRateBinary
+        const epsilonRateBinary = gammaRateBinary
             .split("")
-            .map((bit)=>{
-                if(bit==="0"){
+            .map((bit) => {
+                if (bit === "0") {
                     return 1
                 }
                 return 0
@@ -56,8 +56,33 @@ export const createCalculator = (input: string): Challenge => {
         return gammaRate * epsilonRate
     };
 
+
+    function getRate(compare) {
+        let keep = binaryNumbers
+
+        for (let i = 0; i < keep[0].length; i++) {
+            let ones = []
+            let zeros = []
+            for (let j = 0; j < keep.length; j++) {
+                if (keep[j][i] == 1) {
+                    ones.push(keep[j])
+                } else {
+                    zeros.push(keep[j])
+                }
+            }
+            keep = compare(ones.length,zeros.length)?ones:zeros
+            if(keep.length==1){
+                break
+            }
+
+        }
+        return parseInt(keep[0].join(""),2)
+
+    }
     const calculateAnswer2 = () => {
-        return 0
+        const oxygenRate = getRate((n1,n2)=>n1>=n2)
+        const co2Rating = getRate((n1,n2)=>n1<n2)
+        return co2Rating * oxygenRate
     };
 
 
